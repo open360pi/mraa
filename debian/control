@@ -8,7 +8,7 @@ Homepage: https://github.com/Monstrofil/libmraa
 
 Package: libmraa
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, libjson-c
+Depends: ${misc:Depends}, ${shlibs:Depends}, libjson-c5
 Description: libmraa package files
 
 Package: libmraa-examples
