@@ -1,0 +1,69 @@
+#!/usr/bin/make -f
+#-*- makefile -*-
+
+export DH_VERBOSE=1
+export SHELL	:= /bin/bash
+
+DPKG_VARS				:= $(shell dpkg-architecture)
+DEB_BUILD_MULTIARCH		?= $(call vafilt,$(DPKG_VARS),DEB_BUILD_MULTIARCH)
+DEB_HOST_MULTIARCH		?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
+
+srcname			:= libmraa
+name			:= $(srcname)
+buildroot		:= $(CURDIR)/debian/tmp
+cmaketmp		:= $(CURDIR)/debian/build
+_sourcedir		:= debian/source
+
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+override_dh_auto_build:
+
+override_dh_usrlocal:
+
+
+override_dh_auto_install:
+	# Install files and directories
+	mkdir -p $(buildroot)
+	mkdir -p $(cmaketmp)
+
+	pushd $(cmaketmp) && cmake $(CURDIR) -DCMAKE_INSTALL_PREFIX:PATH=/usr
+	pushd $(cmaketmp) && make -j2 && make install DESTDIR=$(buildroot)/
+
+	# ######################################################################
+	# Packaging
+	dh_movefiles -ppython3-$(name) \
+		./usr/lib/python3.9/
+
+	dh_movefiles -p$(name)-examples \
+		./usr/share/mraa/examples/
+
+	dh_movefiles -p$(name)-dev \
+		./usr/include/
+
+	dh_movefiles -p$(name) \
+		.
+
+override_dh_shlibdeps:
+	echo
+
+override_dh_fixperms:
+	dh_fixperms
+
+
+override_dh_auto_test:
+
+override_dh_auto_clean:
+	rm -rf $(buildroot)
+	rm -rf $(cmaketmp)
+
+override_dh_builddeb:
+	dh_builddeb
+	if [ $(shell find $(buildroot) -type f | wc -l) -gt 0 ]; then \
+		echo "Installed but unpackaged:"; \
+		find $(buildroot) -type f -exec echo "{}" \; | sed -e 's#$(buildroot)##g'; \
+		exit 1; \
+	fi

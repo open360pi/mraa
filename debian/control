@@ -1,0 +1,27 @@
+Source: libmraa
+Section: devel
+Priority: optional
+Maintainer: Monstrofil <shalal545@gmail.com>
+Build-Depends: debhelper (>= 9), gcc, cmake, make,
+	git, build-essential, swig4.0, python-dev, cmake, libjson-c-dev
+Homepage: https://github.com/Monstrofil/libmraa
+
+Package: libmraa
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, libjson-c
+Description: libmraa package files
+
+Package: libmraa-examples
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, libmraa
+Description: libmraa-examples package files
+
+Package: libmraa-dev
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, libmraa
+Description: libmraa-examples package files
+
+Package: python3-libmraa
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, libmraa
+Description: python3-libmraa package files
